@@ -3,6 +3,34 @@ import FeedDb, {getFetchItemsParams} from "../../edge-src/models/FeedDb";
 import OnboardingChecker from "../../common-src/OnboardingUtils";
 import {STATUSES} from "../../common-src/Constants";
 
+async function requireAdminPassword({request, env, next}) {
+  const expected = env.ADMIN_PASSWORD || '';
+  const auth = request.headers.get('Authorization') || '';
+  if (expected && auth.startsWith('Basic ')) {
+    let decoded = '';
+    try {
+      decoded = atob(auth.slice(6));
+    } catch (e) {
+      decoded = '';
+    }
+    // Credential format is "admin:<password>"; compare in constant time.
+    const candidate = `admin:${expected}`;
+    if (decoded.length === candidate.length) {
+      let diff = 0;
+      for (let i = 0; i < decoded.length; i++) {
+        diff |= decoded.charCodeAt(i) ^ candidate.charCodeAt(i);
+      }
+      if (diff === 0) {
+        return next();
+      }
+    }
+  }
+  return new Response('Unauthorized', {
+    status: 401,
+    headers: {'WWW-Authenticate': 'Basic realm="mf admin", charset="UTF-8"'},
+  });
+}
+
 async function fetchFeed({request, next, env, data}) {
   const urlObj = new URL(request.url);
 
@@ -40,4 +68,4 @@ async function fetchFeed({request, next, env, data}) {
   return next();
 }
 
-export const onRequest = [fetchFeed];
+export const onRequest = [requireAdminPassword, fetchFeed];

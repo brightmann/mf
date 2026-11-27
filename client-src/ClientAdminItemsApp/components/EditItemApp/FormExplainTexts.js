@@ -2,6 +2,7 @@ import {ITEM_STATUSES_DICT} from "../../../../common-src/Constants";
 
 export const ITEM_CONTROLS = {
   TITLE: 'item_title',
+  SLUG: 'item_slug',
   IMAGE: 'item_image',
   MEDIA_FILE: 'item_media_file',
   PUB_DATE: 'item_pub_date',
@@ -27,6 +28,13 @@ export const CONTROLS_TEXTS_DICT = {
       "Also, don’t repeat the title of your show within your episode title.",
     rss: '<channel><item><title>Title Here</title></item></channel>',
     json: '{ "items": [{"title": "Title Here"}] }',
+  },
+  [ITEM_CONTROLS.SLUG]: {
+    linkName: 'Slug',
+    modalTitle: 'Item / Slug',
+    text: "A short, URL-friendly name for this item, used in its web address: /i/&lt;slug&gt;-&lt;id&gt;/. Use lowercase letters, numbers and dashes, e.g. 'my-first-post'. If left empty, the slug is generated from the title.",
+    rss: '<channel><item><link>https://example.com/i/my-first-post-xxxxxxxxxxx/</link></item></channel>',
+    json: '{ "items": [{"url": "https://example.com/i/my-first-post-xxxxxxxxxxx/"}] }',
   },
   [ITEM_CONTROLS.IMAGE]: {
     linkName: 'Item image',

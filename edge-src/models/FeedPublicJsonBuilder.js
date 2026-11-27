@@ -23,9 +23,9 @@ export default class FeedPublicJsonBuilder {
   }
 
   _decorateForItem(item, baseUrl) {
-    item.webUrl = PUBLIC_URLS.webItem(item.id, item.title, baseUrl);
-    item.jsonUrl = PUBLIC_URLS.jsonItem(item.id, null, baseUrl);
-    item.rssUrl = PUBLIC_URLS.rssItem(item.id, null, baseUrl);
+    item.webUrl = PUBLIC_URLS.webItem(item.id, item.title, baseUrl, 'en', item.slug);
+    item.jsonUrl = PUBLIC_URLS.jsonItem(item.id, null, baseUrl, 'en', item.slug);
+    item.rssUrl = PUBLIC_URLS.rssItem(item.id, null, baseUrl, 'en', item.slug);
 
     // Try our best to use local time of a website visitor
     const timezone = this.request.cf ? this.request.cf.timezone : null;
@@ -193,6 +193,9 @@ export default class FeedPublicJsonBuilder {
       id: item.id,
       title: item.title || 'untitled',
     };
+    if (item.slug) {
+      newItem['slug'] = item.slug;
+    }
     const attachment = {};
     const _microfeed = {
       is_audio: mediaFile.isAudio,

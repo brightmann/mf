@@ -241,7 +241,19 @@ export default class EditItemApp extends React.Component {
                   onChange={(e) => {
                     const attrDict = {'title': e.target.value};
                     if (action !== 'edit' && !this.state.userChangedLink) {
-                      attrDict.link = PUBLIC_URLS.webItem(itemId, item.title, getPublicBaseUrl());
+                      attrDict.link = PUBLIC_URLS.webItem(itemId, item.title, getPublicBaseUrl(), 'en', item.slug);
+                    }
+                    this.onUpdateItemMeta(attrDict);
+                  }}
+                />
+                <AdminInput
+                  labelComponent={<ExplainText bundle={CONTROLS_TEXTS_DICT[ITEM_CONTROLS.SLUG]}/>}
+                  value={item.slug}
+                  placeholder="e.g. my-first-post (optional)"
+                  onChange={(e) => {
+                    const attrDict = {'slug': e.target.value};
+                    if (action !== 'edit' && !this.state.userChangedLink) {
+                      attrDict.link = PUBLIC_URLS.webItem(itemId, item.title, getPublicBaseUrl(), 'en', e.target.value);
                     }
                     this.onUpdateItemMeta(attrDict);
                   }}
@@ -401,8 +413,8 @@ export default class EditItemApp extends React.Component {
             {action === 'edit' && <div>
               <AdminSideQuickLinks
                 AdditionalLinksDiv={<div className="flex flex-wrap">
-                  <SideQuickLink url={PUBLIC_URLS.webItem(itemId, item.title)} text="web item"/>
-                  <SideQuickLink url={PUBLIC_URLS.jsonItem(itemId)} text="json item"/>
+                  <SideQuickLink url={PUBLIC_URLS.webItem(itemId, item.title, '/', 'en', item.slug)} text="web item"/>
+                  <SideQuickLink url={PUBLIC_URLS.jsonItem(itemId, item.title, '/', 'en', item.slug)} text="json item"/>
                 </div>}
               />
               <div className="lh-page-card mt-4 flex justify-center">

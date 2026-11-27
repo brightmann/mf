@@ -247,9 +247,12 @@ export const ADMIN_URLS = {
 /**
  * Public urls
  */
-function webItem(itemId, itemTitle = null, baseUrl = '/', locale = 'en') {
-  if (itemTitle) {
-    const title = truncateString(itemTitle, 50, false);
+function webItem(itemId, itemTitle = null, baseUrl = '/', locale = 'en', itemSlug = null) {
+  // A stored custom slug (set in the item editor) wins; otherwise the slug
+  // is derived from the title, as before.
+  const slugSource = (itemSlug && String(itemSlug).trim()) || itemTitle;
+  if (slugSource) {
+    const title = truncateString(slugSource, 50, false);
     let slug = slugify(title, {
       lower: true,
       strict: true, // strip special characters except replacement
@@ -294,10 +297,10 @@ export const PUBLIC_URLS = {
     return urlJoin(baseUrl, 'json/openapi.html');
   },
   webItem,
-  jsonItem: (itemId, itemTitle = null, baseUrl = '/', locale = 'en') => {
-    return urlJoin(webItem(itemId, itemTitle, baseUrl, locale), 'json/');
+  jsonItem: (itemId, itemTitle = null, baseUrl = '/', locale = 'en', itemSlug = null) => {
+    return urlJoin(webItem(itemId, itemTitle, baseUrl, locale, itemSlug), 'json/');
   },
-  rssItem: (itemId, itemTitle = null, baseUrl = '/', locale = 'en') => {
-    return urlJoin(webItem(itemId, itemTitle, baseUrl, locale), 'rss/');
+  rssItem: (itemId, itemTitle = null, baseUrl = '/', locale = 'en', itemSlug = null) => {
+    return urlJoin(webItem(itemId, itemTitle, baseUrl, locale, itemSlug), 'rss/');
   },
 };
